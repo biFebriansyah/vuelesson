@@ -40,7 +40,7 @@ img {
     max-width: 100%;
 }
 .pic {
-    width: 400px;
+    width: 300px;
 }
 .inp {
     width: 100%;
@@ -50,7 +50,7 @@ img {
 }
 .detail {
     line-height: 20px;
-    font-size: 14pt;
+    font-size: 13pt;
     margin-bottom: 20px;
 }
 .name {

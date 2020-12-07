@@ -1,13 +1,24 @@
 <template>
     <div class="container">
+        <div class="charts" v-if="chart.length > 0">
+            <h2>Chart = {{ chart.length }}</h2>
+        </div>
+        <div class="inp">
+            <input type="text" v-model="max" />
+            <input type="range" min="0" max="130" v-model="max" />
+        </div>
         <div class="content" v-for="items in datas" :key="items.id">
-            <Items
-                v-if="max >= items.price"
-                :names="items.name"
-                :desc="items.description"
-                :price="items.price"
-                :images="items.image"
-            />
+            <div class="if" v-if="max >= Number(items.price)">
+                <Items
+                    :names="items.name"
+                    :desc="items.description"
+                    :price="items.price"
+                    :images="items.image"
+                />
+                <div class="btn">
+                    <button @click="addChart(items)">Add</button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -83,10 +94,50 @@ export default {
     data() {
         return {
             datas: data,
-            max: 200,
+            max: 90,
+            chart: [],
         }
+    },
+    methods: {
+        addChart(data) {
+            this.chart.push(data)
+            console.log(this.chart)
+        },
     },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.if {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    padding: 8px;
+    font-size: 13pt;
+}
+.inp {
+    width: 100%;
+    display: flex;
+    padding: 20px 0;
+    justify-content: center;
+}
+
+button {
+    width: 80px;
+    height: 30px;
+    background: crimson;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    margin-right: 20px;
+    outline: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: rgb(134, 16, 40);
+}
+</style>
