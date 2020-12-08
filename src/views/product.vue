@@ -2,18 +2,20 @@
     <div class="container">
         <div class="charts" v-if="chart.length > 0">
             <h2>Chart = {{ chart.length }}</h2>
+            <h2>Price = $ {{ calculate }}</h2>
         </div>
         <div class="inp">
             <input type="text" v-model="max" />
             <input type="range" min="0" max="130" v-model="max" />
         </div>
-        <div class="content" v-for="items in datas" :key="items.id">
+        <div :class="dark ? 'dark' : 'content'" v-for="items in datas" :key="items.id">
             <div class="if" v-if="max >= Number(items.price)">
                 <Items
                     :names="items.name"
                     :desc="items.description"
                     :price="items.price"
                     :images="items.image"
+                    :Data="items"
                 />
                 <div class="btn">
                     <button @click="addChart(items)">Add</button>
@@ -25,6 +27,7 @@
 
 <script>
 import Items from "@/components/Items"
+import axios from "axios"
 
 const data = [
     {
@@ -96,18 +99,67 @@ export default {
             datas: data,
             max: 90,
             chart: [],
+            total: 0,
+            dark: false,
         }
     },
     methods: {
         addChart(data) {
             this.chart.push(data)
-            console.log(this.chart)
+            this.dark = !this.dark
+        },
+        toDetail(data) {
+            // berpindah halaman + passing data
+            this.$router.push({ path: "/detail", params: { data: data } })
+        },
+        addData(value) {
+            axios({
+                method: "post",
+                url: process.env.VUE_APP_API,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                data: {
+                    name: value.name,
+                    price: value.price,
+                },
+            })
+        },
+    },
+    computed: {
+        calculate() {
+            let harga = 0
+            for (const data of this.chart) {
+                harga = Number(data.price) + harga
+            }
+            return harga
+        },
+    },
+    mounted() {
+        axios
+            .get(process.env.VUE_APP_URL)
+            .then((res) => {
+                this.datas = res.data
+            })
+            .catch((err) => {
+                console.log(err)
+                this.$router.push({ path: "/" })
+            })
+    },
+    watch: {
+        max: () => {
+            alert("Value max berubah")
         },
     },
 }
 </script>
 
 <style scoped>
+.dark {
+    background: black;
+    color: white;
+}
+
 .if {
     display: flex;
     justify-content: center;

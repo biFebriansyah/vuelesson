@@ -4,7 +4,7 @@
             <img :src="images" :alt="names" />
         </div>
         <div class="desc">
-            <h2 class="name">{{ names }}</h2>
+            <h2 class="name" @click="goDetail()">{{ names }}</h2>
             <p class="detail">{{ desc }}</p>
             <h3 class="price">{{ price }}</h3>
         </div>
@@ -30,6 +30,15 @@ export default {
         images: {
             type: String,
             required: true,
+        },
+        Data: {
+            type: Object,
+        },
+    },
+    methods: {
+        goDetail() {
+            console.log(this.Data)
+            this.$router.push({ name: "detail", params: { data: this.Data } })
         },
     },
 }
